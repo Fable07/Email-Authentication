@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html>
+<title>
+    User Profile
+</title>
+
+<head>
+    <meta name="viewport" content="with=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css"
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="CSS/profile.css">
+</head>
+
+<body>
+    <div class="container">
+        <div class="main">
+            <div class="topbar">
+                <button class="btn btn-outline-success" type="button" id="signoutbutton">Logout</button>
+
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4 mt-1">
+                <div class="card text-center sidebar">
+                    <div class="card-body">
+                        <img src="images/Teacher.png" class="rounded-circle" width="150">
+                        <div class="mt-3">
+                            <h3 id="first"></h3>
+
+                            <a>Status</a>
+                            Online
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-8 mt-1">
+                <div class="card mb-3 content">
+                    <h3 class="m-3 pt-3">Personal Information</h3>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-3">
+                                <h5>Name</h5>
+                            </div>
+                            <div class="col-md-9 text-secondary">
+                                <h7 id="fullname"></h7>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="row">
+                            <div class="col-md-3">
+                                <h5>Email</h5>
+                            </div>
+                            <div class="col-md-9 text-secondary">
+                                <h7 id="email"></h7>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="row">
+                            <div class="col-md-3">
+                                <h5>Nickname</h5>
+                            </div>
+                            <div class="col-md-9 text-secondary">
+                                <h7 id="nickname"></h7>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="row">
+                            <div class="col-md-3">
+                                <h5>Phone</h5>
+                            </div>
+                            <div class="col-md-9 text-secondary">
+                                <h7 id="mobile"></h7>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="row">
+                            <div class="col-md-3">
+                                <h5>Birthday</h5>
+                            </div>
+                            <div class="col-md-9 text-secondary">
+                                <h7 id="birth"></h7>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+        crossorigin="anonymous"></script>
+
+    <script>
+        let UserCreds = JSON.parse(sessionStorage.getItem("user-creds"));
+        let UserInfo = JSON.parse(sessionStorage.getItem("user-info"));
+
+        let first = document.getElementById('first');
+        let fullname = document.getElementById('fullname');
+        let email = document.getElementById('email');
+        let nickname = document.getElementById('nickname');
+        let mobile = document.getElementById('mobile');
+        let birth = document.getElementById('birth');
+
+        let SignoutBtn = document.getElementById('signoutbutton');
+
+
+        let Signout = () => {
+            sessionStorage.removeItem("user-creds");
+            sessionStorage.removeItem("user-info");
+            window.location.href = 'login.html';
+
+        }
+
+        let Checkred = () => {
+            if (!sessionStorage.getItem("user-creds"))
+                window.location.href = 'login.html'
+
+            else {
+                first.innerText = `${UserInfo.firstname}`;
+                fullname.innerText = `${UserInfo.firstname + " " + UserInfo.lastname}`;
+                email.innerText = `${UserCreds.email}`;
+                nickname.innerText = `${UserInfo.username}`;
+                mobile.innerText = `${UserInfo.mobile}`;
+                birth.innerText = `${UserInfo.birth}`;
+
+            }
+        }
+
+        window.addEventListener('load', Checkred);
+        SignoutBtn.addEventListener('click', Signout);
+    </script>
+
+
+
+</body>
+
+</html>

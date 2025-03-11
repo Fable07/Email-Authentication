@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css"
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="CSS/login.css">
+    <title>Login</title>
+</head>
+
+<body>
+    <header>
+        <h1>Login</h1>
+    </header>
+    <nav>
+        <a href="main.html">Home</a>
+        <a href="#">About</a>
+        <a href="#">Services</a>
+        <a href="#">Contact</a>
+        <a href="register.html">Register</a>
+    </nav>
+    <form id="MainForm">
+        <input type="text" id="email" name="email" placeholder="E-mail" required />
+
+        <input type="password" id="password" name="password" placeholder="Password" required />
+
+        <input type="submit" id="login" name="login" value="Login" />
+    </form>
+    <p>Don't have an account? <a href="register.html">Register here</a>.</p>
+
+    <center>
+        <h4>Email: </h4>
+        <h5 id="displayEmail">none</h5>
+        <h4>Verified: </h4>
+        <h5 id="status">none</h5>
+    </center>
+</body>
+
+<script type="module">
+    // Import the functions you need from the SDKs you need
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
+    import { getDatabase, get, ref, child } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-database.js";
+    import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
+    // TODO: Add SDKs for Firebase products that you want to use
+    // https://firebase.google.com/docs/web/setup#available-libraries
+
+    // Your web app's Firebase configuration
+    const firebaseConfig = {
+        apiKey: "AIzaSyD-kaTvzQFfjViQ-WJnGCxlhG3UFh9oVYU",
+        authDomain: "ipt-project-bdebc.firebaseapp.com",
+        databaseURL: "https://ipt-project-bdebc-default-rtdb.firebaseio.com",
+        projectId: "ipt-project-bdebc",
+        storageBucket: "ipt-project-bdebc.appspot.com",
+        messagingSenderId: "664374179429",
+        appId: "1:664374179429:web:ccac9c191a0a6aaceab88c"
+    };
+
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const database = getDatabase(app);
+    const auth = getAuth(app);
+    const dbref = ref(database);
+
+    let email = document.getElementById('email');
+    let password = document.getElementById('password');
+    let MainForm = document.getElementById('MainForm');
+    let dspEmail = document.getElementById('displayEmail');
+    let status = document.getElementById('status');
+
+
+
+    let SignInUser = evt => {
+        evt.preventDefault();
+
+        signInWithEmailAndPassword(auth, email.value, password.value)
+            .then((userCredential) => {
+
+                const user = userCredential.user;
+
+                dspEmail.textContent = user.email;
+                status.textContent = user.emailVerified;
+
+                get(child(dbref, 'users/' + user.uid)).then((snapshot) => {
+                    if (snapshot.exists) {
+                        sessionStorage.setItem("user-info", JSON.stringify({
+                            firstname: snapshot.val().firstname,
+                            lastname: snapshot.val().lastname,
+                            username: snapshot.val().username,
+                            mobile: snapshot.val().mobile,
+                            birth: snapshot.val().birth
+                        }))
+                        sessionStorage.setItem("user-creds", JSON.stringify(userCredential.user));
+                        alert('Logging In...');
+                        window.location.href = 'profile.html';
+                    }
+
+                })
+            })
+            .catch((error) => {
+                alert(error.message);
+
+                console.log(error.code);
+                console.log(error.message);
+            })
+    }
+    MainForm.addEventListener('submit', SignInUser);
+
+</script>
+
+</html>
